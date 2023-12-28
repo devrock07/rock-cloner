@@ -28,6 +28,7 @@ $ tsx .
 ## Termux/Mobile
 ```Termux/moblie
 $ git clone https://github.com/devrock07/rock-cloner.git
+$ cd rock-cloner
 $ npm i
 $ npm i -g tsx
 $ tsx .
