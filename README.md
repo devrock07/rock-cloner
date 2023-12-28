@@ -25,8 +25,9 @@ $ npm i -g tsx
 $ tsx .
 ```
 **You can also use [codesandbox](https://codesandbox.io/dashboard/recent) to start the cloner**
-```Ternux/moblie
-$ git clone
+## Termux/Mobile
+```Termux/moblie
+$ git clone https://github.com/devrock07/rock-cloner.git
 $ npm i
 $ npm i -g tsx
 $ tsx .
