@@ -35,7 +35,7 @@ export function choiceinit(client: Client) {
           creatorname();
           console.log(
             gradient(["red", "purple"])(
-              "Link: https://discord.gg/kVdJewfNax"
+              "Link: https://discord.gg/M9pXMkyrbC"
             )
           );
           awaitenter(client);
