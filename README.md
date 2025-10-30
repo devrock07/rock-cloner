@@ -1,6 +1,6 @@
 # 💠 Rock Cloner V2 – Discord Server Cloner (Windows EXE)
 
-![App Screenshot](3b4e2a2d-a3ee-42ae-bfb6-0017fd581b7e.png)
+![App Screenshot](https://i.ibb.co/6R9qP7BK/ROCK-CLONER.png)
 
 A standalone Windows application that allows you to **clone an entire Discord server’s structure** from one server to another — no Python setup required.  
 
@@ -29,7 +29,7 @@ Built with **PyQt6** for a modern UI experience.
 
 1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](../../releases/tag/v2.0) section.  
 2. Extract the folder anywhere on your PC.  
-3. Run `rockclonerv2.exe`.  
+3. Run `main.exe`.  
 4. Enter your **Discord bot token** and **source/destination server IDs**.  
 5. Click **Start Clone** — the tool will do the rest!  
 
