@@ -1,63 +1,67 @@
-💠 Rock Cloner V2 - Discord Server Cloner
+# 💠 Rock Cloner V2 – Discord Server Cloner (Windows EXE)
 
-Made with Python : https://www.python.org/
-Discord Selfbot : https://discord.com
+![App Screenshot](3b4e2a2d-a3ee-42ae-bfb6-0017fd581b7e.png)
 
-> Welcome to Rock Cloner V2 - Discord Server Cloner
+A standalone Windows application that allows you to **clone an entire Discord server’s structure** from one server to another — no Python setup required.  
 
-A powerful tool that clones a Discord server’s structure from one to another—built entirely in Python with a sleek interactive terminal UI.
+Built with **PyQt6** for a modern UI experience.
 
-────────────────────────────────────────────
+---
 
-🔧 Features
+## ⚙️ Features
 
-✅ Clone the following server components:
-- Roles  
-- Categories  
-- Channels  
-- Emojis (optional)  
-- Server icon and name  
+✅ Clone everything from one Discord server to another:
+- Roles (with permissions)  
+- Categories and channels (text + voice)  
+- Emojis *(optional)*  
+- Server name and icon  
+- Auto-clean destination server before cloning  
 
-💡 Features a stylish terminal interface using:
-- questionary
-- inquirer
-- pyfiglet
-- rich
+💻 Additional Features:
+- Interactive, modern GUI  
+- Settings tab for configuration  
+- Optional emoji and icon copying  
+- Built-in documentation and credits section  
 
-────────────────────────────────────────────
+---
 
-🚀 How to Use
+## 🚀 How to Use
 
-1. Open a terminal in the project folder  
-2. Run the following command:
-   python main.py
+1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](../../releases/tag/v2.0) section.  
+2. Extract the folder anywhere on your PC.  
+3. Run `rockclonerv2.exe`.  
+4. Enter your **Discord bot token** and **source/destination server IDs**.  
+5. Click **Start Clone** — the tool will do the rest!  
 
-3. Enter your Discord user token
-4. Input:
-   - Source Server ID
-   - Destination Server ID
-5. Choose what to clone
-6. Let Rock Cloner V2 handle the rest 🚀
+---
 
-────────────────────────────────────────────
+## 🪄 Notes
 
-📦 Requirements
+- Requires a **bot token** with `Manage Server`, `Manage Channels`, `Manage Roles`, and `Read Messages` permissions.  
+- The bot must be in **both servers** (source & destination).  
+- Built for **Windows 10/11** (64-bit).  
+- All files are self-contained — no installation or setup required.  
 
-Ensure Python 3.10 – 3.12 is installed.
+---
 
-Install dependencies:
-   pip install -r requirements.txt
+## 🧩 Credits
 
-────────────────────────────────────────────
+- UI/UX: **Devrock**  
+- Framework: **PyQt6 + Nuitka**  
+- Author: [Dev Bhakat](https://github.com/devrock07)  
 
-⚠️ Disclaimer
+---
 
-This tool is for educational purposes only.  
-Self-bots are against Discord's Terms of Service and can result in account termination.  
-You are solely responsible for how you use this tool.
+## 🐛 Troubleshooting
 
-────────────────────────────────────────────
+If the EXE doesn’t open:
+- Right-click → *Run as Administrator*  
+- Disable antivirus temporarily (some AVs flag PyInstaller/Nuitka builds)  
+- Check if `config.json` exists inside `/data`  
 
-👤 Author
+If issues persist, create a [GitHub Issue](../../issues) with your error screenshot.
 
-Crafted with ❤️ by DEVROCK
+---
+
+⭐ **Star the repo if you like it!**
+
