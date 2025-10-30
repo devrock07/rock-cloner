@@ -1,4 +1,4 @@
-name: Update Rock Cloner v2.0 ZIP (Windows)
+name: Upload rockclonerv2.zip to existing v2.0 release
 
 on:
   push:
@@ -13,41 +13,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Upload directly using GitHub API
-      - name: Upload new rockclonerv2.zip to existing v2.0 release
+      - name: Upload new rockclonerv2.zip to release v2.0
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
         run: |
           echo "📦 Uploading rockclonerv2.zip to release v2.0..."
-          
+
           # get release id for v2.0
-          $release_id=$(curl -s \
-            -H "Authorization: token $env:GITHUB_TOKEN" \
-            https://api.github.com/repos/$env:REPO/releases/tags/v2.0 | jq -r ".id")
-          
-          if ($release_id -eq "null" -or -not $release_id) {
+          release_id=$(curl -s \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/$REPO/releases/tags/v2.0 | jq -r ".id")
+
+          if [ "$release_id" = "null" ] || [ -z "$release_id" ]; then
             echo "❌ Release v2.0 not found!"
             exit 1
-          }
+          fi
 
           # delete existing asset with same name
-          $asset_id=$(curl -s \
-            -H "Authorization: token $env:GITHUB_TOKEN" \
-            https://api.github.com/repos/$env:REPO/releases/$release_id/assets | jq -r '.[] | select(.name=="rockclonerv2.zip") | .id')
-          if ($asset_id) {
+          asset_id=$(curl -s \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/$REPO/releases/$release_id/assets | jq -r '.[] | select(.name=="rockclonerv2.zip") | .id')
+          if [ -n "$asset_id" ]; then
             echo "🗑️ Deleting old asset..."
             curl -s -X DELETE \
-              -H "Authorization: token $env:GITHUB_TOKEN" \
-              https://api.github.com/repos/$env:REPO/releases/assets/$asset_id
-          }
+              -H "Authorization: token $GITHUB_TOKEN" \
+              https://api.github.com/repos/$REPO/releases/assets/$asset_id
+          fi
 
-          # upload new file
+          # upload new zip file
           echo "⬆️ Uploading new asset..."
           curl -s \
-            -H "Authorization: token $env:GITHUB_TOKEN" \
+            -H "Authorization: token $GITHUB_TOKEN" \
             -H "Content-Type: application/zip" \
             --data-binary "@rockclonerv2.zip" \
-            "https://uploads.github.com/repos/$env:REPO/releases/$release_id/assets?name=rockclonerv2.zip"
+            "https://uploads.github.com/repos/$REPO/releases/$release_id/assets?name=rockclonerv2.zip"
 
           echo "✅ Upload complete!"
