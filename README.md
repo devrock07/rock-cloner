@@ -90,3 +90,4 @@ Follow these steps to run **Rock Cloner V2**:
 | Name | Role | Contact |
 |------|------|----------|
 | **DEVROCK** | Developer & Maintainer | [Python.org](https://www.python.org) / [Discord](https://github.com/devrock07) |
+| **Asnehita** | GFX Designer | [Python.org](https://www.python.org) / [Discord](https://github.com/asnehitadas-71) |
