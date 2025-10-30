@@ -1,12 +1,9 @@
-name: Build and Release ROCK CLONER EXE v2.0 (Windows Branch)
+name: Build ROCK CLONER EXE v2.0
 
 on:
-  workflow_dispatch:
   push:
     branches:
-      - windows        # only trigger from this branch
-    tags:
-      - 'v2.0'         # only build when tag v2.0 is created
+      - windows
 
 jobs:
   build:
@@ -15,50 +12,56 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: windows   # build from 'windows' branch
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install Nuitka and dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install nuitka pyqt6
 
-      - name: Build ROCK CLONER EXE with Nuitka
-        shell: cmd
+      - name: Build EXE with Nuitka
         run: |
           python -m nuitka ^
-          --standalone ^
-          --windows-console-mode=disable ^
-          --enable-plugin=pyqt6 ^
-          --include-qt-plugins=sensible,multimedia ^
-          --include-data-dir=core=core ^
-          --include-data-dir=ui=ui ^
-          --include-data-dir=utils=utils ^
-          --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png ^
-          --include-data-file=logo.png=logo.png ^
-          --windows-icon-from-ico=logo.ico ^
-          --output-dir=rock-cloner ^
-          main.py
+            --standalone ^
+            --assume-yes-for-downloads ^
+            --windows-console-mode=disable ^
+            --enable-plugin=pyqt6 ^
+            --include-qt-plugins=sensible,multimedia ^
+            --include-data-dir=core=core ^
+            --include-data-dir=ui=ui ^
+            --include-data-dir=utils=utils ^
+            --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png ^
+            --include-data-file=logo.png=logo.png ^
+            --windows-icon-from-ico=logo.ico ^
+            --output-dir=rock-cloner ^
+            main.py
 
-      - name: Zip the built files
-        shell: pwsh
-        run: Compress-Archive -Path rock-cloner\main.dist\* -DestinationPath ROCK_CLONER.zip
+      - name: Upload EXE as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ROCK-CLONER-EXE-v2.0
+          path: rock-cloner/**
 
-      - name: Create GitHub Release and upload ROCK CLONER EXE v2.0
-        uses: softprops/action-gh-release@v1
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download built artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ROCK-CLONER-EXE-v2.0
+          path: rock-cloner
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0
-          name: "ROCK CLONER EXE v2.0"
-          body: |
-            🚀 **ROCK CLONER EXE v2.0**  
-            Built automatically from the `windows` branch using Nuitka and PyQt6.  
-            Includes all required assets and plugins.  
-            Download the ZIP and run the EXE inside.
-          files: ROCK_CLONER.zip
+          name: ROCK CLONER EXE v2.0
+          files: rock-cloner/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
