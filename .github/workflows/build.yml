@@ -1,4 +1,4 @@
-name: Upload rockclonerv2.zip to existing v2.0 release
+name: Self-Healing Rock Cloner v2.0 Uploader
 
 on:
   push:
@@ -13,41 +13,57 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Upload new rockclonerv2.zip to release v2.0
+      - name: Upload rockclonerv2.zip to release v2.0
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
         run: |
-          echo "📦 Uploading rockclonerv2.zip to release v2.0..."
+          set -e
+          echo "📦 Checking and uploading release v2.0..."
 
-          # get release id for v2.0
-          release_id=$(curl -s \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            https://api.github.com/repos/$REPO/releases/tags/v2.0 | jq -r ".id")
+          # Check for release
+          release_json=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/$REPO/releases/tags/v2.0)
 
+          release_id=$(echo "$release_json" | jq -r '.id')
+
+          # If not found, create it
           if [ "$release_id" = "null" ] || [ -z "$release_id" ]; then
-            echo "❌ Release v2.0 not found!"
-            exit 1
+            echo "🆕 Release v2.0 not found — creating it..."
+            release_json=$(curl -s -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"tag_name":"v2.0","name":"Rock Cloner v2.0","body":"Automatic release created by workflow","draft":false,"prerelease":false}' \
+              https://api.github.com/repos/$REPO/releases)
+            release_id=$(echo "$release_json" | jq -r '.id')
+            echo "✅ Created release v2.0 with ID $release_id"
+          else
+            echo "✅ Found existing release v2.0 (ID: $release_id)"
           fi
 
-          # delete existing asset with same name
-          asset_id=$(curl -s \
-            -H "Authorization: token $GITHUB_TOKEN" \
+          # Delete old asset if exists
+          asset_id=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             https://api.github.com/repos/$REPO/releases/$release_id/assets | jq -r '.[] | select(.name=="rockclonerv2.zip") | .id')
           if [ -n "$asset_id" ]; then
-            echo "🗑️ Deleting old asset..."
+            echo "🗑️ Deleting old rockclonerv2.zip..."
             curl -s -X DELETE \
               -H "Authorization: token $GITHUB_TOKEN" \
               https://api.github.com/repos/$REPO/releases/assets/$asset_id
           fi
 
-          # upload new zip file
-          echo "⬆️ Uploading new asset..."
+          # Upload new file
+          if [ ! -f rockclonerv2.zip ]; then
+            echo "❌ rockclonerv2.zip not found in repo root!"
+            exit 1
+          fi
+
+          echo "⬆️ Uploading new rockclonerv2.zip..."
+          upload_url="https://uploads.github.com/repos/$REPO/releases/$release_id/assets?name=rockclonerv2.zip"
           curl -s \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Content-Type: application/zip" \
             --data-binary "@rockclonerv2.zip" \
-            "https://uploads.github.com/repos/$REPO/releases/$release_id/assets?name=rockclonerv2.zip"
+            "$upload_url"
 
           echo "✅ Upload complete!"
