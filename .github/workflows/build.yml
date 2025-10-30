@@ -6,7 +6,7 @@ on:
       - windows
 
 permissions:
-  contents: write  # ✅ allows creating releases and uploading files
+  contents: write  # allow creating releases
 
 jobs:
   build:
@@ -39,31 +39,44 @@ jobs:
           --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png
           --include-data-file=logo.png=logo.png
           --windows-icon-from-ico=logo.ico
-          --output-dir=rock-cloner main.py
+          --output-dir=build main.py
 
-      - name: Upload EXE as artifact
+      - name: Prepare folder for ZIP
+        run: |
+          mkdir rockcloner
+          move build\main.dist\* rockcloner\
+        shell: cmd
+
+      - name: Create ZIP with all files (EXE + DLLs + dependencies)
+        shell: pwsh
+        run: |
+          Compress-Archive -Path rockcloner\* -DestinationPath rockcloner-v2.0.zip
+          Write-Host "✅ Packed full Nuitka build (EXE + DLLs) into rockcloner-v2.0.zip"
+
+      - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ROCK-CLONER-EXE-v2.0
-          path: rock-cloner/**
+          name: ROCK-CLONER-v2.0
+          path: rockcloner-v2.0.zip
 
   release:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # ✅ allows publishing release
+      contents: write
+
     steps:
-      - name: Download built artifact
+      - name: Download built ZIP
         uses: actions/download-artifact@v4
         with:
-          name: ROCK-CLONER-EXE-v2.0
-          path: rock-cloner
+          name: ROCK-CLONER-v2.0
+          path: .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0
           name: ROCK CLONER EXE v2.0
-          files: rock-cloner/**
+          files: rockcloner-v2.0.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
