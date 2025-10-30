@@ -1,4 +1,4 @@
-name: Upload Rock Cloner v2.0 ZIP (Windows)
+name: Update Rock Cloner v2.0 ZIP (Windows)
 
 on:
   push:
@@ -13,17 +13,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create or update v2.0 release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v2.0
-          name: "Rock Cloner V2.0"
-          body: |
-            🪨 Rock Cloner V2.0 Windows build
-            Automatically uploaded from the `windows` branch.
-          draft: false
-          prerelease: false
-          files: |
-            rockclonerv2.zip
+      # Upload directly using GitHub API
+      - name: Upload new rockclonerv2.zip to existing v2.0 release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "📦 Uploading rockclonerv2.zip to release v2.0..."
+          
+          # get release id for v2.0
+          $release_id=$(curl -s \
+            -H "Authorization: token $env:GITHUB_TOKEN" \
+            https://api.github.com/repos/$env:REPO/releases/tags/v2.0 | jq -r ".id")
+          
+          if ($release_id -eq "null" -or -not $release_id) {
+            echo "❌ Release v2.0 not found!"
+            exit 1
+          }
+
+          # delete existing asset with same name
+          $asset_id=$(curl -s \
+            -H "Authorization: token $env:GITHUB_TOKEN" \
+            https://api.github.com/repos/$env:REPO/releases/$release_id/assets | jq -r '.[] | select(.name=="rockclonerv2.zip") | .id')
+          if ($asset_id) {
+            echo "🗑️ Deleting old asset..."
+            curl -s -X DELETE \
+              -H "Authorization: token $env:GITHUB_TOKEN" \
+              https://api.github.com/repos/$env:REPO/releases/assets/$asset_id
+          }
+
+          # upload new file
+          echo "⬆️ Uploading new asset..."
+          curl -s \
+            -H "Authorization: token $env:GITHUB_TOKEN" \
+            -H "Content-Type: application/zip" \
+            --data-binary "@rockclonerv2.zip" \
+            "https://uploads.github.com/repos/$env:REPO/releases/$release_id/assets?name=rockclonerv2.zip"
+
+          echo "✅ Upload complete!"
