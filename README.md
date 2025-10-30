@@ -37,7 +37,7 @@ Ensure you have **Python 3.10 – 3.12** installed.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/rock-cloner-v2.git
+git clone https://github.com/devrock07/rock-cloner-v2.git
 cd rock-cloner-v2
 
 # Install dependencies
