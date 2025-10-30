@@ -1,82 +1,24 @@
-name: Build ROCK CLONER EXE v2.0
+name: Upload ROCK CLONER ZIP
 
 on:
-  push:
-    branches:
-      - windows
+  workflow_dispatch:  # ✅ allows manual trigger from Actions tab
 
 permissions:
-  contents: write  # allow creating releases
+  contents: write  # ✅ required for release creation
 
 jobs:
-  build:
-    runs-on: windows-latest
+  upload:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install nuitka pyqt6
-
-      - name: Build EXE with Nuitka
-        shell: cmd
-        run: >
-          python -m nuitka --standalone --assume-yes-for-downloads
-          --windows-console-mode=disable
-          --enable-plugin=pyqt6
-          --include-qt-plugins=sensible,multimedia
-          --include-data-dir=core=core
-          --include-data-dir=ui=ui
-          --include-data-dir=utils=utils
-          --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png
-          --include-data-file=logo.png=logo.png
-          --windows-icon-from-ico=logo.ico
-          --output-dir=build main.py
-
-      - name: Prepare folder for ZIP
-        run: |
-          mkdir rockcloner
-          move build\main.dist\* rockcloner\
-        shell: cmd
-
-      - name: Create ZIP with all files (EXE + DLLs + dependencies)
-        shell: pwsh
-        run: |
-          Compress-Archive -Path rockcloner\* -DestinationPath rockcloner-v2.0.zip
-          Write-Host "✅ Packed full Nuitka build (EXE + DLLs) into rockcloner-v2.0.zip"
-
-      - name: Upload ZIP as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ROCK-CLONER-v2.0
-          path: rockcloner-v2.0.zip
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Download built ZIP
-        uses: actions/download-artifact@v4
-        with:
-          name: ROCK-CLONER-v2.0
-          path: .
-
-      - name: Create GitHub Release
+      - name: Upload ZIP to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0
           name: ROCK CLONER EXE v2.0
-          files: rockcloner-v2.0.zip
+          files: rockcloner-v2.0.zip  # <-- your ZIP file name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
