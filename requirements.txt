@@ -8,5 +8,7 @@ questionary
 requests
 readchar
 pyfiglet
+asyncio
 aiohttp
+PyQt6
 pygame
