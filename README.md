@@ -27,7 +27,7 @@ Built with **PyQt6** for a modern UI experience.
 
 ## 🚀 How to Use
 
-1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](../../releases/tag/v2.0) section.  
+1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](../../releases/tag/2.0) section.  
 2. Extract the folder anywhere on your PC.  
 3. Run `main.exe`.  
 4. Enter your **Discord bot token** and **source/destination server IDs**.  
