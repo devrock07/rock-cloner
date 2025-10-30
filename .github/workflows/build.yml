@@ -5,6 +5,9 @@ on:
     branches:
       - windows
 
+permissions:
+  contents: write  # ✅ allows creating releases and uploading files
+
 jobs:
   build:
     runs-on: windows-latest
@@ -47,7 +50,8 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write  # ✅ allows publishing release
     steps:
       - name: Download built artifact
         uses: actions/download-artifact@v4
