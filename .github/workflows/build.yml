@@ -6,7 +6,7 @@ on:
     branches:
       - windows        # only trigger from this branch
     tags:
-      - 'v2.0'         # only run for tag v2.0
+      - 'v2.0'         # only build when tag v2.0 is created
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: windows   # checkout the 'windows' branch
+          ref: windows   # build from 'windows' branch
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -28,23 +28,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install nuitka pyqt6
 
-      - name: Build ROCK CLONER EXE
+      - name: Build ROCK CLONER EXE with Nuitka
+        shell: cmd
         run: |
           python -m nuitka ^
-            --standalone ^
-            --windows-console-mode=disable ^
-            --enable-plugin=pyqt6 ^
-            --include-qt-plugins=sensible,multimedia ^
-            --include-data-dir=core=core ^
-            --include-data-dir=ui=ui ^
-            --include-data-dir=utils=utils ^
-            --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png ^
-            --include-data-file=logo.png=logo.png ^
-            --windows-icon-from-ico=logo.ico ^
-            --output-dir=rock-cloner ^
-            main.py
+          --standalone ^
+          --windows-console-mode=disable ^
+          --enable-plugin=pyqt6 ^
+          --include-qt-plugins=sensible,multimedia ^
+          --include-data-dir=core=core ^
+          --include-data-dir=ui=ui ^
+          --include-data-dir=utils=utils ^
+          --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png ^
+          --include-data-file=logo.png=logo.png ^
+          --windows-icon-from-ico=logo.ico ^
+          --output-dir=rock-cloner ^
+          main.py
 
       - name: Zip the built files
+        shell: pwsh
         run: Compress-Archive -Path rock-cloner\main.dist\* -DestinationPath ROCK_CLONER.zip
 
       - name: Create GitHub Release and upload ROCK CLONER EXE v2.0
@@ -53,8 +55,10 @@ jobs:
           tag_name: v2.0
           name: "ROCK CLONER EXE v2.0"
           body: |
-            🚀 ROCK CLONER EXE v2.0  
-            Built automatically from the **windows** branch using Nuitka + PyQt6.
+            🚀 **ROCK CLONER EXE v2.0**  
+            Built automatically from the `windows` branch using Nuitka and PyQt6.  
+            Includes all required assets and plugins.  
+            Download the ZIP and run the EXE inside.
           files: ROCK_CLONER.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
