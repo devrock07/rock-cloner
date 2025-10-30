@@ -8,6 +8,14 @@ Built with **PyQt6** for a modern UI experience.
 
 ---
 
+<p align="center">
+  <a href="https://github.com/devrock07/rock-cloner/releases/tag/2.0">
+    <img src="https://img.shields.io/badge/⬇️%20Download%20Rock%20Cloner%20V2-blue?style=for-the-badge&logo=github" alt="Download Rock Cloner V2">
+  </a>
+</p>
+
+---
+
 ## ⚙️ Features
 
 ✅ Clone everything from one Discord server to another:
@@ -27,7 +35,7 @@ Built with **PyQt6** for a modern UI experience.
 
 ## 🚀 How to Use
 
-1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](../../releases/tag/2.0) section.  
+1. **Download the latest Rock Cloner V2 ZIP** from the [Releases](https://github.com/devrock07/rock-cloner/releases/tag/2.0) section.  
 2. Extract the folder anywhere on your PC.  
 3. Run `main.exe`.  
 4. Enter your **Discord bot token** and **source/destination server IDs**.  
@@ -57,11 +65,9 @@ Built with **PyQt6** for a modern UI experience.
 If the EXE doesn’t open:
 - Right-click → *Run as Administrator*  
 - Disable antivirus temporarily (some AVs flag PyInstaller/Nuitka builds)  
-- Check if `config.json` exists inside `/data`  
 
-If issues persist, create a [GitHub Issue](../../issues) with your error screenshot.
+If issues persist, create a [GitHub Issue](https://github.com/devrock07/rock-cloner/issues) with your error screenshot.
 
 ---
 
 ⭐ **Star the repo if you like it!**
-
