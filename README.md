@@ -1,4 +1,4 @@
-# Rock Cloner V2 — Discord Server Cloner
+# Rock Cloner V2 Discord Server Cloner
 
 A **powerful Python-based Discord server cloning tool** that replicates server structure from one Discord server to another, including roles, categories, channels, and more all through an interactive terminal interface.
 
