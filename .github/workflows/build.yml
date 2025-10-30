@@ -1,4 +1,4 @@
-name: Upload ZIP to Release (Windows)
+name: Upload Rock Cloner v2.0 ZIP (Windows)
 
 on:
   push:
@@ -13,27 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get version tag
-        id: version
-        run: |
-          echo "TAG=v$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_ENV
-
-      - name: Create Release
-        id: create_release
+      - name: Create or update v2.0 release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TAG }}
-          name: "Rock Cloner V2 Release ${{ env.TAG }}"
-          body: "Automated release for Windows branch build"
+          tag_name: v2.0
+          name: "Rock Cloner V2.0"
+          body: |
+            🪨 Rock Cloner V2.0 Windows build
+            Automatically uploaded from the `windows` branch.
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload ZIP file to release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.TAG }}
           files: |
             rockclonerv2.zip
         env:
