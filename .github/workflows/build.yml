@@ -24,21 +24,19 @@ jobs:
           pip install nuitka pyqt6
 
       - name: Build EXE with Nuitka
-        run: |
-          python -m nuitka ^
-            --standalone ^
-            --assume-yes-for-downloads ^
-            --windows-console-mode=disable ^
-            --enable-plugin=pyqt6 ^
-            --include-qt-plugins=sensible,multimedia ^
-            --include-data-dir=core=core ^
-            --include-data-dir=ui=ui ^
-            --include-data-dir=utils=utils ^
-            --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png ^
-            --include-data-file=logo.png=logo.png ^
-            --windows-icon-from-ico=logo.ico ^
-            --output-dir=rock-cloner ^
-            main.py
+        shell: cmd
+        run: >
+          python -m nuitka --standalone --assume-yes-for-downloads
+          --windows-console-mode=disable
+          --enable-plugin=pyqt6
+          --include-qt-plugins=sensible,multimedia
+          --include-data-dir=core=core
+          --include-data-dir=ui=ui
+          --include-data-dir=utils=utils
+          --include-data-file=ROCK_CLONER.png=ROCK_CLONER.png
+          --include-data-file=logo.png=logo.png
+          --windows-icon-from-ico=logo.ico
+          --output-dir=rock-cloner main.py
 
       - name: Upload EXE as artifact
         uses: actions/upload-artifact@v4
